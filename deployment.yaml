@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pokeapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pokeapi
+  template:
+    metadata:
+      labels:
+        app: pokeapi
+    spec:
+      containers:
+        - name: pokeapi
+          image: pokeapi:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DATABASE_URL
+              value: postgresql+psycopg://pokemon:change_me@postgres-service:5432/pokemon
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pokeapi-service
+spec:
+  selector:
+    app: pokeapi
+  ports:
+    - port: 80
+      targetPort: 8000
+  type: ClusterIP
