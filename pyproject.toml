@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "pokeapi-backend-final"
+version = "1.0.0"
+description = "API REST de Pokémon com FastAPI, SQLAlchemy e PostgreSQL"
+authors = ["Lucas Machi"]
+readme = "README.md"
+packages = [{ include = "app" }]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.115.0"
+uvicorn = { version = "^0.30.0", extras = ["standard"] }
+sqlalchemy = "^2.0.0"
+psycopg = { version = "^3.2.0", extras = ["binary"] }
+pydantic = "^2.8.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.0"
+httpx = "^0.27.0"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[build-system]
+requires = ["poetry-core>=1.8.0"]
+build-backend = "poetry.core.masonry.api"
