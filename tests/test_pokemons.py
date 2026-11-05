@@ -47,3 +47,16 @@ def test_missing_pokemon_returns_404(client):
 def test_validation_rejects_invalid_data(client):
     assert client.post("/pokemons", json=payload(pokedex_number=0)).status_code == 422
     assert client.post("/pokemons", json=payload(hp=-1)).status_code == 422
+
+def test_update_rejects_null_required_fields(client):
+    pokemon_id = client.post("/pokemons", json=payload()).json()["id"]
+
+    response = client.put(
+        f"/pokemons/{pokemon_id}",
+        json={"name": None}
+    )
+
+    assert response.status_code == 422
+
+    pokemon = client.get(f"/pokemons/{pokemon_id}").json()
+    assert pokemon["name"] == "Pikachu"
