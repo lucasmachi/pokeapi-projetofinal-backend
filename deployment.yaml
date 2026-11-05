@@ -20,7 +20,10 @@ spec:
             - containerPort: 8000
           env:
             - name: DATABASE_URL
-              value: postgresql+psycopg://pokemon:change_me@postgres-service:5432/pokemon
+              valueFrom:
+                secretKeyRef:
+                  name: pokeapi-secrets
+                  key: DATABASE_URL
 ---
 apiVersion: v1
 kind: Service
