@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict, Field, StringConstraints
+from pydantic import BaseModel, ConfigDict, Field, StringConstraints, model_validator
 from typing import Annotated
 
 PokemonName = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=80)]
@@ -32,6 +32,14 @@ class PokemonUpdate(BaseModel):
     special_defense: int | None = Field(default=None, ge=0, le=999)
     speed: int | None = Field(default=None, ge=0, le=999)
     generation: int | None = Field(default=None, ge=1, le=9)
+    @model_validator(mode="before")
+    @classmethod
+    def reject_null_values(cls, data):
+        if isinstance(data, dict):
+            for field, value in data.items():
+                if value is None and field != "type_2":
+                    raise ValueError(f"{field} não pode ser null")
+        return data
 
 class PokemonRead(PokemonBase):
     model_config = ConfigDict(from_attributes=True)
